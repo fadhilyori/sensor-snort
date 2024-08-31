@@ -1,14 +1,17 @@
-version: "3"
-
 volumes:
-  snort_data:
+  snort_log:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=1g,uid=1000
 
 services:
   snort:
     build: 
       context: ./
       ## Please uncomment if you'd prefer to use the locally downloaded rule instead of the downloaded version
-      # dockerfile: snort/offline.Dockerfile
+      # dockerfile: offline.Dockerfile
       # args:
         # RULE_FILENAME: snortrules-snapshot-31470.tar.gz
     network_mode: host
@@ -17,7 +20,7 @@ services:
       - NETWORK_INTERFACE=eth0
     volumes:
       - ./snort/snort.lua:/usr/local/etc/snort/snort.lua:ro
-      - snort_data:/var/log/snort:rw
+      - snort_log:/var/log/snort:rw
     deploy:
       resources:
         limits:
@@ -34,28 +37,28 @@ services:
 # String/text `<sensor-id>` will be replaced with content from SENSOR_ID env var
 #
 
-  snort-parser:
-    image: mataelang/snort3-parser:1.1
-    depends_on:
-      - snort
-    restart: always
-    environment:
-      - MQTT_HOST=192.168.1.1
-      - MQTT_PORT=1883
-      - MQTT_USERNAME=mataelang
-      - MQTT_PASSWORD=mataelang
-      - MAX_PCAP_FILES=5
-      - SENSOR_ID=<machine-id>
-      - MQTT_TOPIC=mataelang/sensor/v3/<sensor-id>
-      - SNORT_ALERT_FILE_PATH=/var/log/snort/alert_json.txt
-    volumes:
-      - /etc/machine-id:/etc/machine-id:ro
-      - snort_data:/var/log/snort:rw
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 25M
-        reservations:
-          cpus: '0.15'
-          memory: 15M
+  # snort-parser:
+  #   image: mfscy/snort3-parser:1.1
+  #   depends_on:
+  #     - snort
+  #   restart: always
+  #   environment:
+  #     - MQTT_HOST=192.168.1.1
+  #     - MQTT_PORT=1883
+  #     - MQTT_USERNAME=mataelang
+  #     - MQTT_PASSWORD=mataelang
+  #     - MAX_PCAP_FILES=5
+  #     - SENSOR_ID=<machine-id>
+  #     - MQTT_TOPIC=mataelang/sensor/v3/<sensor-id>
+  #     - SNORT_ALERT_FILE_PATH=/var/log/snort/alert_json.txt
+  #   volumes:
+  #     - /etc/machine-id:/etc/machine-id:ro
+  #     - snort_data:/var/log/snort:rw
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.25'
+  #         memory: 25M
+  #       reservations:
+  #         cpus: '0.15'
+  #         memory: 15M
