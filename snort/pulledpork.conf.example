@@ -1,15 +1,15 @@
 # Which Snort/Talos rulesets do you want to download (recomended: choose only one)
 community_ruleset = false
-registered_ruleset = true
+registered_ruleset = false
 LightSPD_ruleset = false
 
 # Your Snort oinkcode is required for snort/talos Subscription, Light_SPD, and Registered rulesets
-oinkcode = <your-oinkcode>
+oinkcode = xxxxx
 
 
 # which blocklists to download
-snort_blocklist = true
-et_blocklist = true
+snort_blocklist = false
+et_blocklist = false
 
 # additional blocklists to download from a URL, comma-separated
 #blocklist_urls = http://a.b.com/list.list
@@ -26,11 +26,10 @@ blocklist_path = /usr/local/etc/lists/default.blocklist
 # ruleset, and will be used to compile .so rules if you don't provide the distro.
 
 # Where is the Snort Executable located (if not on the system path)
-snort_path = /usr/local/bin/snort
+#snort_path = /usr/local/bin/snort
 
 # Which version of snort are you running (optional, not usually needed.). This version will over-rule snort_path
-#snort_version = 3.1.39.0
-snort_version = 3.1.47.0
+#snort_version = 3.1.0.0
 
 # Where is the PID file for your running snort process/daemon (required to tell snort to reload the
 # new rules after rules are modified) This is optional, but recomended.
@@ -60,7 +59,6 @@ rule_path = /usr/local/etc/rules/pulledpork.rules
 # Local Rules files
 # Specify local rules files, comma-separated
 #local_rules = /usr/local/etc/rules/local.rules, /another/path/to/more/rules
-local_rules = /usr/local/etc/rules/local.rules
 
 # Rules files to ignore
 # includes.rules and snort3-deleted.rules are recommended to always be ignored
@@ -75,12 +73,12 @@ include_disabled_rules = false
 
 # where should so rules be saved
 # so rules will only be processed if this is uncommented
-#sorule_path = /usr/local/etc/so_rules/
+sorule_path = /usr/local/etc/so_rules/
 
 # What Distro are you running?  This must match one of the supported distros:
 # centos-x64, debian-x64, fc-x64, opensuse-x64, ubuntu-x64
 # disable this entry to compile rules manually (not yet supported)
-distro = debian-x64
+distro = ubuntu-x64
 
 # do you want all the different policys files written to a local directory (for advanced users)
 #policies_path = /usr/local/etc/rules/
@@ -112,4 +110,4 @@ distro = debian-x64
 #temp_path = /tmp
 
 # Pulledpork3 configuration version variable: may be used in future
-CONFIGURATION_NUMBER = 3.0.0.0
+CONFIGURATION_NUMBER = 3.0.0.3
