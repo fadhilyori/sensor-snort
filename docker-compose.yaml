@@ -5,30 +5,43 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: size=1g,uid=1000
+  snort_data:
 
 services:
   snort:
-    build: 
-      context: ./
-      ## Please uncomment if you'd prefer to use the locally downloaded rule instead of the downloaded version
-      # dockerfile: offline.Dockerfile
-      # args:
-        # RULE_FILENAME: snortrules-snapshot-31470.tar.gz
+    image: mfscy/snort-base:3.3.4.0-debian-12.6
     network_mode: host
-    restart: always
     environment:
+      - SNORT_OINKCODE=
       - NETWORK_INTERFACE=eth0
+      - DOWNLOAD_RULES=false
+      - SNORT_COMPRESSED_RULES_FILE_PATH=
+      - COMMUNITY_RULESET=false
+      - REGISTERED_RULESET=false
+      - LIGHTSPD_RULESET=false
+      - SNORT_BLOCKLIST=false
+      - ET_BLOCKLIST=false
+      - BLOCKLIST_URLS=
+      - IPS_POLICY=balanced
     volumes:
-      - ./snort/snort.lua:/usr/local/etc/snort/snort.lua:ro
       - snort_log:/var/log/snort:rw
+      - snort_data:/usr/local/etc/snort3
+      - ./rules:/tmp/rules
     deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        delay: 10s
+      placement:
+        constraints:
+          - node.role == manager
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 512M
-        reservations:
-          cpus: '0.7'
-          memory: 256M
+
 
 ###########################
 #         Note            #
